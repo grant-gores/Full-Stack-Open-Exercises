@@ -42,16 +42,16 @@ const Part = ({ part }) => {
 const Content = ({ parts }) => {
   return (
     <div>
-      {parts.map((part, index) => (
-        <Part key={index} part={part} />
-      ))}
+      <Part part={parts[0]} />
+      <Part part={parts[1]} />
+      <Part part={parts[2]} />
     </div>
   )
 }
 
 const Total = ({ parts }) => {
   return (
-    <p>Number of exercises {parts.reduce((sum, part) => sum + part.exercises, 0)}</p>
+    <p>Number of exercises {parts[0].exercises + parts[1].exercises + parts[2].exercises}</p>
   )
 }
 
