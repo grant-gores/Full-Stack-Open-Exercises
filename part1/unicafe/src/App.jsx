@@ -12,7 +12,7 @@ const Button = (props) => {
   )
 }
 
-const Display = (props) => (
+const StatisticLine = (props) => (
   <div>
     {props.text} {props.clicks}
   </div>
@@ -30,12 +30,12 @@ const Statistics = ({ good, neutral, bad }) => {
         <p>No feedback given</p>
       ) : (
         <>
-          <Display text="good" clicks={good} />
-          <Display text="neutral" clicks={neutral} />
-          <Display text="bad" clicks={bad} />
-          <Display text="all" clicks={total} />
-          <Display text="average" clicks={average} />
-          <Display text="positive" clicks={positive} />
+          <StatisticLine text="good" clicks={good} />
+          <StatisticLine text="neutral" clicks={neutral} />
+          <StatisticLine text="bad" clicks={bad} />
+          <StatisticLine text="all" clicks={total} />
+          <StatisticLine text="average" clicks={average} />
+          <StatisticLine text="positive" clicks={positive} />
         </>
       )}
     </div>
