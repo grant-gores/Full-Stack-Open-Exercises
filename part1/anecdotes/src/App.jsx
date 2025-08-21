@@ -1,20 +1,24 @@
 import { useState } from 'react'
 
-const Button = (props) => {
-  return (
+const Button = (props) => (
   <button onClick={props.onClick}>
     {props.text}
   </button>
   )
-}
 
-const Display = (props) => {
-  return (
-    <p>
-      {props.anecdotes[props.selected]}
-    </p>
+const DisplayAnecdote = (props) => (
+  <div>
+    {props.anecdotes[props.selected]}
+  </div>
   )
-}
+
+const DisplayVote = (props) => (
+  <div>
+    {props.votes[props.selected]}
+  </div>
+  )  
+  
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -28,17 +32,26 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
-  const handleClick = () => {
+  const handleAnecdoteClick = () => {
     const randomNumber = Math.floor(Math.random() * anecdotes.length)
-    setSelected((selected - selected) + randomNumber)
+    setSelected(randomNumber)
+  }
+
+  const handleVoteClick = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+    setVotes(copy)
   }
 
 
   return (
     <div>
-      <Display anecdotes={anecdotes} selected={selected} />
-      <Button onClick={handleClick} text='next anecdote'/>
+      <DisplayAnecdote anecdotes={anecdotes} selected={selected} />
+      <DisplayVote votes={votes} selected={selected} />
+      <Button onClick={handleVoteClick} text='vote'/>
+      <Button onClick={handleAnecdoteClick} text='next anecdote'/>
     </div>
   )
 }
