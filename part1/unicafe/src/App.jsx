@@ -13,9 +13,9 @@ const Button = (props) => {
 }
 
 const Display = (props) => (
-  <p>
+  <div>
     {props.text} {props.clicks}
-  </p>
+  </div>
 )
 
 const App = () => {
@@ -49,6 +49,9 @@ const App = () => {
       <Display text={"good"} clicks={good}/>
       <Display text={"neutral"} clicks={neutral}/>
       <Display text={"bad"} clicks={bad}/>
+      <Display text={"all"} clicks={good + neutral + bad}/>
+      <Display text={"average"} clicks={(good - bad) / (good + neutral + bad)}/>
+      <Display text={"positive"} clicks={(good) / (good + neutral + bad)+"%"}/>
     </div>
   )
 }
