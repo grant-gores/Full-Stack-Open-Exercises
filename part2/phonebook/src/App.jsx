@@ -1,8 +1,8 @@
 import { useState } from 'react'
-
-const Title = (props) => {
-  return (<h2>{props.text}</h2>)
-}
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+import Title from './components/Title'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -49,19 +49,11 @@ const addName = (event) => {
   return (
     <div>
       <Title text={"Phonebook"}/>
-      <div> filter show with: <input value={searchTerm} onChange={handleSearchTerm} required/> </div>
+      <Filter searchTerm={searchTerm} handleSearchTerm={handleSearchTerm}/>
       <Title text={"add a new"}/>
-      <form onSubmit={addName}>
-        <div> name: <input value={newName} onChange={handleNameChange} pattern="[a-zA-Z\s]+" required/> </div>
-        <div> number: <input value={newNumber} onChange={handleNumberChange} pattern="[0-9\-]+" required/> </div>
-        <div> <button type="submit">add</button> </div>
-      </form>
+      <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <Title text={"Numbers"}/>
-        <ul>
-          {filteredPersons.map((person, index) =>
-          <li key={index}>{person.name} {person.number}</li>
-          )}
-        </ul>
+      <Persons persons={filteredPersons}/>
     </div>
   )
 }
