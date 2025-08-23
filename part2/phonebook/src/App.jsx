@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import noteService from './services/notes'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -12,8 +12,8 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    noteService
+      .getAll()
       .then(response => {
         setPersons(response.data)
       })
@@ -28,8 +28,8 @@ const App = () => {
     if (isDuplicate) {
       alert(`${newName} is already added to phonebook`)
     } else {
-      axios
-      .post('http://localhost:3001/persons', nameObject)
+      noteService
+      .create(nameObject)
       .then(response => {
         setPersons(persons.concat(response.data))
         setNewName('')
