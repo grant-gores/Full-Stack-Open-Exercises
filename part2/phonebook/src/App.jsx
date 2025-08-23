@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import noteService from './services/notes'
+import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -12,7 +12,7 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
-    noteService
+    personService
       .getAll()
       .then(response => {
         setPersons(response.data)
@@ -28,7 +28,7 @@ const App = () => {
     if (isDuplicate) {
       alert(`${newName} is already added to phonebook`)
     } else {
-      noteService
+      personService
       .create(nameObject)
       .then(response => {
         setPersons(persons.concat(response.data))
@@ -52,7 +52,27 @@ const App = () => {
 
   const filteredPersons = persons.filter(person =>
     person.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
+
+  const deleteRecord = id => {
+    const person = persons.find(p => p.id === id)
+    const changedPerson = { ...person}
+    if (!person) return
+
+    const confirmed = window.confirm(`Delete ${changedPerson.name}?`)
+    if (!confirmed) return alert(`${changedPerson.name} not deleted`)
+
+    personService
+    .deletePerson(id, changedPerson)
+    .then(response => {
+      setPersons(persons.filter(p => p.id !== id))
+    })
+    .catch(error => {
+      alert(
+        `the Person '${person.content}' was already deleted from the server`
+      )
+    })
+  }
 
   return (
     <div>
@@ -61,7 +81,7 @@ const App = () => {
       <Title text={"add a new"}/>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <Title text={"Numbers"}/>
-      <Persons persons={filteredPersons}/>
+      <Persons persons={filteredPersons} deleteRecord={deleteRecord}/>
     </div>
   )
 }
