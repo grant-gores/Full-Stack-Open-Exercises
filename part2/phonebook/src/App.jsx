@@ -23,18 +23,36 @@ const App = () => {
     event.preventDefault()
 
     const nameObject = { name: newName, number: newNumber }
-    const isDuplicate = persons.some(person => person.name === newName)
+    const existingPerson = persons.find(p => p.name === newName)
 
-    if (isDuplicate) {
-      alert(`${newName} is already added to phonebook`)
+    if (existingPerson) {
+      const confirmReplace = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with the new one?`
+      )
+
+      if (confirmReplace) {
+        const changedPerson = { ...existingPerson, number: newNumber }
+
+        personService
+          .update(existingPerson.id, changedPerson)
+          .then(response => {
+            setPersons(persons.map(p => p.id === existingPerson.id ? response.data : p))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            alert(`Information of ${newName} has already been removed from server`)
+            setPersons(persons.filter(p => p.id !== existingPerson.id))
+          })
+      }
     } else {
       personService
-      .create(nameObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-      })
+        .create(nameObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
     }
   }
 
@@ -56,14 +74,13 @@ const App = () => {
 
   const deleteRecord = id => {
     const person = persons.find(p => p.id === id)
-    const changedPerson = { ...person}
     if (!person) return
 
-    const confirmed = window.confirm(`Delete ${changedPerson.name}?`)
-    if (!confirmed) return alert(`${changedPerson.name} not deleted`)
+    const confirmed = window.confirm(`Delete ${person.name}?`)
+    if (!confirmed) return alert(`${person.name} not deleted`)
 
     personService
-    .deletePerson(id, changedPerson)
+    .deletePerson(id)
     .then(response => {
       setPersons(persons.filter(p => p.id !== id))
     })
