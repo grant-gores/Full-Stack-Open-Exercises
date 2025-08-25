@@ -4,12 +4,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Title from './components/Title'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState("")
+  const [addedMessage, setAddedMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -52,6 +54,10 @@ const App = () => {
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
+          setAddedMessage(`Added ${newName}`)
+          setTimeout(() => {
+            setAddedMessage(null)
+          }, 5000)
         })
     }
   }
@@ -94,6 +100,7 @@ const App = () => {
   return (
     <div>
       <Title text={"Phonebook"}/>
+      <Notification message={addedMessage}/>
       <Filter searchTerm={searchTerm} handleSearchTerm={handleSearchTerm}/>
       <Title text={"add a new"}/>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
