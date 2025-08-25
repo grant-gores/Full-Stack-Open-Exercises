@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState("")
   const [addedMessage, setAddedMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -43,7 +44,12 @@ const App = () => {
             setNewNumber('')
           })
           .catch(error => {
-            alert(`Information of ${newName} has already been removed from server`)
+            setErrorMessage(
+              `Information of ${newName} has already been moved from the server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
             setPersons(persons.filter(p => p.id !== existingPerson.id))
           })
       }
@@ -91,16 +97,21 @@ const App = () => {
       setPersons(persons.filter(p => p.id !== id))
     })
     .catch(error => {
-      alert(
-        `the Person '${person.content}' was already deleted from the server`
+      setErrorMessage(
+        `Information of '${person.name}' has already been moved from the server`
       )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      setPersons(persons.filter(p => p.id !== id))
     })
   }
 
   return (
     <div>
       <Title text={"Phonebook"}/>
-      <Notification message={addedMessage}/>
+      <Notification message={addedMessage} type="success"/>
+      <Notification message={errorMessage}type="error"/>
       <Filter searchTerm={searchTerm} handleSearchTerm={handleSearchTerm}/>
       <Title text={"add a new"}/>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
