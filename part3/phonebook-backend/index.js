@@ -82,6 +82,15 @@ app.post('/api/persons', (request, response) => {
       error: 'name or number missing',
     })
   }
+
+  const duplicateName = persons.find((p) => p.name.toLowerCase() === body.name.toLowerCase())
+
+  if (duplicateName) {
+    return response.status(400).json({
+    error: 'name must be unique',
+    })
+  }
+
   const person = {
     name: body.name,
     number: body.number,
