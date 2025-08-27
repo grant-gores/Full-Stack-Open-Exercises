@@ -26,8 +26,13 @@ let persons =
         }
     ]
 
+morgan.token('body', (req) => {
+  return req.method === 'POST' ? JSON.stringify(req.body) : ''
+})
+
 app.use(express.json())
 app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 // get base url
 app.get('/', (request, response) => {
