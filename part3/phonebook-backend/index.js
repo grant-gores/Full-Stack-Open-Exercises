@@ -54,15 +54,42 @@ app.get('/api/persons/:id', (request, response) => {
   if (person) {
     response.json(person)
   } else {
-    response.status(404).end
+    response.status(404).end()
   }
 })
 
+// delete single record
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
   persons = persons.filter((p) => p.id !== id)
 
   response.status(204).end()
+})
+
+// generate new id
+const generateId = () => {
+  const maxId = 
+    persons.length > 0 ? Math.max(...persons.map((p) => Number(p.id))) : 0
+  return String(maxId + 1)
+}
+
+// post new phonebook entries
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: 'name or number missing',
+    })
+  }
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(),
+  }
+
+  persons = persons.concat(person)
+  response.json(person)
 })
 
 const PORT = 3001
